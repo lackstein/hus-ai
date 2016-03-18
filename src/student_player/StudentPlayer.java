@@ -15,7 +15,7 @@ public class StudentPlayer extends HusPlayer {
      * This is important, because this is what the code that runs the
      * competition uses to associate you with your agent.
      * The constructor should do nothing else. */
-    public StudentPlayer() { super("xxxxxxxxx"); }
+    public StudentPlayer() { super("260524490"); }
 
     /** This is the primary method that you need to implement.
      * The ``board_state`` object contains the current state of the game,
