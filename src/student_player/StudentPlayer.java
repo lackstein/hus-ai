@@ -6,6 +6,7 @@ import hus.HusMove;
 
 import java.util.ArrayList;
 
+import student_player.eval_funcs.AlphaBetaSearch;
 import student_player.eval_funcs.LinearEval;
 
 /** A Hus player submitted by a student. */
@@ -23,34 +24,7 @@ public class StudentPlayer extends HusPlayer {
      * for another example agent. */
     public HusMove chooseMove(HusBoardState board_state)
     {
-        // Get the legal moves for the current board state.
-        ArrayList<HusMove> moves = board_state.getLegalMoves();
-        // Loop through moves and find one which has the greatest estimated value
-        double best_result = 0.0;
-        HusMove best_move = new HusMove();
-        for(HusMove move : moves) {
-        	HusBoardState cloned_board_state = (HusBoardState) board_state.clone();
-            cloned_board_state.move(move);
-            
-            // Get the contents of the pits so we can use it to make decisions.
-            int[][] pits = cloned_board_state.getPits();
-
-            // Use ``player_id`` and ``opponent_id`` to get my pits and opponent pits.
-            int[] my_pits = pits[player_id];
-            int[] op_pits = pits[opponent_id];
-            
-            double result = LinearEval.eval(my_pits, op_pits);
-            
-            if(result > best_result) {
-            	best_result = result;
-            	best_move = move;
-            	
-            	System.out.println("New best move: pit " + move.getPit() + " for result " + result);
-            }
-        }
-        
-
-        // But since this is a placeholder algorithm, we won't act on that information.
-        return best_move;
+        AlphaBetaSearch search = new AlphaBetaSearch(board_state, player_id, opponent_id);
+        return search.decide();
     }
 }
