@@ -6,6 +6,7 @@ require 'logger'
 log_name = "#{Time.now.to_i}.txt"
 logger = Logger.new "/var/www/html/logs/#{log_name}"
 port = rand(1000) + 20000
+cmd = "cd ~/hus-ai/; LOGNAME=#{log_name} java -cp bin boardgame.Server -ng -p #{port}"
 
 puts <<~START
 You can connect to the server by running:
@@ -15,7 +16,7 @@ A log of the game is available at:
 START
 
 # see: http://stackoverflow.com/a/1162850/83386
-Open3.popen3("cd ~/hus-ai/; java -cp bin boardgame.Server -ng -p #{port}") do |stdin, stdout, stderr, thread|
+Open3.popen3(cmd) do |stdin, stdout, stderr, thread|
   # read each stream from a new thread
   { :out => stdout, :err => stderr }.each do |key, stream|
     Thread.new do

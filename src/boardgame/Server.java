@@ -344,6 +344,8 @@ public class Server implements Runnable {
                     log( msg );
                     players[i].send( msg );
                 }
+                
+                broadcast("You can access the logfile of this game at http://hus.lackstein.com/logs/" + System.getenv("LOGNAME"));
 
                 // Game is started
                 gameStarted = true;
