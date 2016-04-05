@@ -3,7 +3,7 @@
 require 'open3'
 
 port = rand(1000) + 20000
-cmd = "java -cp bin boardgame.Server -ng -p #{port}"
+cmd = "cd ~/hus-ai/; java -cp bin boardgame.Server -ng -p #{port}"
 data = {:out => [], :err => []}
 
 puts <<~INTRO
