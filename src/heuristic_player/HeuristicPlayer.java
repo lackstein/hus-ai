@@ -5,8 +5,8 @@ import hus.HusPlayer;
 import hus.HusMove;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-import student_player.eval_funcs.AlphaBetaSearch;
 import student_player.eval_funcs.LinearEval;
 
 /** A Hus player submitted by a student. */
@@ -39,7 +39,7 @@ public class HeuristicPlayer extends HusPlayer {
             int[] my_pits = pits[player_id];
             int[] op_pits = pits[opponent_id];
             
-            LinearEval heuristic = new LinearEval(0.75, 1, 0.5, 0);
+            LinearEval heuristic = new LinearEval(player_id);
             double result = heuristic.eval(my_pits, op_pits);
             
             if(result > best_result) {
