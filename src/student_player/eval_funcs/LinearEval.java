@@ -57,9 +57,9 @@ public class LinearEval {
 			//op_steal_sum = 0;
 		}
 		
-		return weights.getOrDefault("MY_INNER_WEIGHT", 0d) * my_inner_sum + weights.getOrDefault("MY_OUTER_WEIGHT", 0d) * my_outer_sum +
-				weights.getOrDefault("MY_STEAL_WEIGHT", 0d) * my_steal_sum + 
-				weights.getOrDefault("OP_INNER_WEIGHT", 0d) * op_inner_sum + weights.getOrDefault("OP_OUTER_WEIGHT", 0d) * op_outer_sum +
-				weights.getOrDefault("OP_STEAL_WEIGHT", 0d) * op_steal_sum;
+		return this.weights.getOrDefault("MY_INNER_WEIGHT", 0d) * my_inner_sum + this.weights.getOrDefault("MY_OUTER_WEIGHT", 0d) * my_outer_sum +
+				this.weights.getOrDefault("MY_STEAL_WEIGHT", 0d) * my_steal_sum + 
+				this.weights.getOrDefault("OP_INNER_WEIGHT", 0d) * op_inner_sum + this.weights.getOrDefault("OP_OUTER_WEIGHT", 0d) * op_outer_sum +
+				this.weights.getOrDefault("OP_STEAL_WEIGHT", 0d) * op_steal_sum;
 	}
 }
