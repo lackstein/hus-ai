@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/home/hus/.rvm/rubies/ruby-2.3.0/bin/ruby
 
 require 'open3'
 
