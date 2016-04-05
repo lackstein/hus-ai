@@ -18,7 +18,7 @@ Open3.popen3("cd ~/hus-ai/; java -cp bin boardgame.Server -ng -p #{port}") do |s
       until (raw_line = stream.gets).nil? do
         parsed_line = Hash[:timestamp => Time.now, :line => "#{raw_line}"]
         # append new lines
-        self.data[key].push parsed_line
+        data[key].push parsed_line
 
         puts raw_line
       end
