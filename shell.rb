@@ -13,8 +13,6 @@ start random: starts the random player
 start player: starts Noah's player
 INTRO
 
-main()
-
 def start_server
   server_started = true
   
@@ -101,3 +99,5 @@ def main
     end
   end
 end
+
+main()
