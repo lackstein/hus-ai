@@ -2,8 +2,6 @@
 
 require 'open3'
 
-HusServer.new.main()
-
 class HusServer
   attr_accessor :port, :data, :server_started
   
@@ -107,3 +105,5 @@ class HusServer
     end
   end
 end
+
+HusServer.new.main()
