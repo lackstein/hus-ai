@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LinearEval {
-	HashMap<String, Double> weights = new HashMap<String, Double>();
+	private HashMap<String, Double> weights = new HashMap<String, Double>();
 	private int player_id;
 	
 	public LinearEval(int player_id) {
