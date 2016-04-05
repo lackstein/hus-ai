@@ -87,26 +87,29 @@ class HusServer
     start random: starts the random player
     start player: starts Noah's player
     INTRO
+
+    start_server
+    start_player 'hus.RandomHusPlayer'
     
-    puts intro_text
-    
-    t = Thread.new do
-      while line = gets.chomp
-        case line
-        when 'start server'
-          start_server
-        when 'start random'
-          start_player 'hus.RandomHusPlayer'
-        when 'start player'
-          start_player 'student_player.StudentPlayer'
-        else
-          puts "Invalid command."
-          puts intro_text
-        end
-      end
-    end
-    
-    t.join
+    # puts intro_text
+    #
+    # t = Thread.new do
+    #   while line = gets.chomp
+    #     case line
+    #     when 'start server'
+    #       start_server
+    #     when 'start random'
+    #       start_player 'hus.RandomHusPlayer'
+    #     when 'start player'
+    #       start_player 'student_player.StudentPlayer'
+    #     else
+    #       puts "Invalid command."
+    #       puts intro_text
+    #     end
+    #   end
+    # end
+    #
+    # t.join
   end
 end
 
