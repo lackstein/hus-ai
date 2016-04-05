@@ -4,6 +4,7 @@ require 'open3'
 
 port = rand(1000) + 20000
 data = {:out => [], :err => []}
+server_started = false
 
 intro_text =  <<~INTRO
 Available commands:
@@ -12,23 +13,11 @@ start random: starts the random player
 start player: starts Noah's player
 INTRO
 
-puts intro_text
-
-while line = gets.chomp
-  case line
-  when 'start server'
-    start_server
-  when 'start random'
-    start_player 'hus.RandomHusPlayer'
-  when 'start player'
-    start_player 'student_player.StudentPlayer'
-  else
-    puts "Invalid command."
-    puts intro_text
-  end
-end
+main()
 
 def start_server
+  server_started = true
+  
   puts <<~START
   You can connect to the server by running:
     java -cp bin boardgame.Client student_player.StudentPlayer hus.lackstein.com #{port}
@@ -64,6 +53,8 @@ def start_server
 end
 
 def start_player(player)
+  start_server unless server_started
+  
   cmd = "cd ~/hus-ai/; java -cp bin boardgame.Client #{player} localhost #{port}"
   Open3.popen3(cmd) do |stdin, stdout, stderr, thread|
     # read each stream from a new thread
@@ -90,5 +81,23 @@ def start_player(player)
     }
   
     thread.join # don't exit until the external process is done
+  end
+end
+
+def main
+  puts intro_text
+  
+  while line = gets.chomp
+    case line
+    when 'start server'
+      start_server
+    when 'start random'
+      start_player 'hus.RandomHusPlayer'
+    when 'start player'
+      start_player 'student_player.StudentPlayer'
+    else
+      puts "Invalid command."
+      puts intro_text
+    end
   end
 end
