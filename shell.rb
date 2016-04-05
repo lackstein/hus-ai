@@ -20,8 +20,7 @@ Open3.popen3("cd ~/hus-ai/; java -cp bin boardgame.Server -ng -p #{port}") do |s
   { :out => stdout, :err => stderr }.each do |key, stream|
     Thread.new do
       until (raw_line = stream.gets).nil? do
-        Logger.info raw_line
-
+        logger.info raw_line
         puts raw_line
       end
     end
