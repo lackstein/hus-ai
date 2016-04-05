@@ -90,7 +90,7 @@ class HusServer
     
     puts intro_text
     
-    Thread.new do
+    t = Thread.new do
       while line = gets.chomp
         case line
         when 'start server'
@@ -106,6 +106,7 @@ class HusServer
       end
     end
     
+    t.join
   end
 end
 
