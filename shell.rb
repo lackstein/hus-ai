@@ -6,9 +6,9 @@ class HusServer
   attr_accessor :port, :data, :server_started
   
   def initialize
-    port = rand(1000) + 20000
-    data = {:out => [], :err => []}
-    server_started = false
+    self.port = rand(1000) + 20000
+    self.data = {:out => [], :err => []}
+    self.server_started = false
   end
 
   def start_server
@@ -89,20 +89,23 @@ class HusServer
     INTRO
     
     puts intro_text
-  
-    while line = gets.chomp
-      case line
-      when 'start server'
-        start_server
-      when 'start random'
-        start_player 'hus.RandomHusPlayer'
-      when 'start player'
-        start_player 'student_player.StudentPlayer'
-      else
-        puts "Invalid command."
-        puts intro_text
+    
+    Thread.new do
+      while line = gets.chomp
+        case line
+        when 'start server'
+          start_server
+        when 'start random'
+          start_player 'hus.RandomHusPlayer'
+        when 'start player'
+          start_player 'student_player.StudentPlayer'
+        else
+          puts "Invalid command."
+          puts intro_text
+        end
       end
     end
+    
   end
 end
 
