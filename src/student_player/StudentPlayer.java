@@ -10,7 +10,7 @@ import student_player.eval_funcs.AlphaBetaSearch;
 
 /** A Hus player submitted by a student. */
 public class StudentPlayer extends HusPlayer {
-	HashMap<String, Double> weights = new HashMap<>();
+	HashMap<String, Double> weights = new HashMap<String, Double>();
 	
     /** You must modify this constructor to return your student number.
      * This is important, because this is what the code that runs the
