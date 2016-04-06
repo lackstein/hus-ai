@@ -4,10 +4,10 @@ require 'thwait'
 require 'csv'
 
 POPULATION_SIZE = 6
-NUM_GENERATIONS = 10
+NUM_GENERATIONS = 20
 CROSSOVER_RATE = 0.7
 MUTATION_RATE = 0.002
-AUTOPLAY_GAMES = 4
+AUTOPLAY_GAMES = 2
 
 module HMap
   refine Hash do
@@ -74,7 +74,9 @@ class Chromosome
       end
     else
       raise("Must have 6 genes") unless genes.size == 6
-      self.genes = genes
+      self.genes = genes.map do |gene|
+        8.downto(0).map { |bit| gene.to_i[bit] }.join
+      end
     end
   end
 
@@ -203,7 +205,7 @@ class Population
 
             results = CSV.parse results
             results.each do |result|
-              winner = results[4] == "AlphaPlayer" ? alpha : beta
+              winner = result[4] == "AlphaPlayer" ? alpha : beta
               loser = winner == alpha ? beta : alpha
 
               self.fitness.add_game winner: winner, loser: loser
@@ -217,43 +219,47 @@ class Population
     end
   end
 
-end
+  def self.run!
+    population = Population.new
+    population.seed!
 
-population = Population.new
-population.seed!
+    1.upto(NUM_GENERATIONS).each do |generation|
+      population.battle!
 
-1.upto(NUM_GENERATIONS).each do |generation|
-  population.battle!
-
-  offspring = Population.new
-  offspring.chromosomes.concat population.fittest(2).collect(&:first)
+      offspring = Population.new
+      n = (population.count.to_f / 10).ceil
+      offspring.chromosomes.concat population.fittest(n).collect(&:first)
 
 
-  while offspring.count < population.count
-    parent1 = population.select
-    parent2 = population.select
+      while offspring.count < population.count
+        parent1 = population.select
+        parent2 = population.select
 
-    if rand <= CROSSOVER_RATE
-      child1, child2 = parent1 & parent2
-    else
-      child1 = parent1
-      child2 = parent2
+        if rand <= CROSSOVER_RATE
+          child1, child2 = parent1 & parent2
+        else
+          child1 = parent1
+          child2 = parent2
+        end
+
+        child1.mutate!
+        child2.mutate!
+
+        if POPULATION_SIZE.even?
+          offspring.chromosomes << child1 << child2
+        else
+          offspring.chromosomes << [child1, child2].sample
+        end
+      end
+
+      puts "Generation #{generation} - Average: #{population.average_fitness.round(2)} - Max: #{population.max_fitness}"
+      puts "Population: " + population.fitness_values.sort { |a, b| b[1] <=> a[1] }.to_s
+
+      population = offspring unless generation == NUM_GENERATIONS
     end
 
-    child1.mutate!
-    child2.mutate!
-
-    if POPULATION_SIZE.even?
-      offspring.chromosomes << child1 << child2
-    else
-      offspring.chromosomes << [child1, child2].sample
-    end
+    puts "Final population: " + population.fittest(5).to_s
   end
-
-  puts "Generation #{generation} - Average: #{population.average_fitness.round(2)} - Max: #{population.max_fitness}"
-  puts "Population: " + population.fitness_values.sort { |a, b| b[1] <=> a[1] }.to_s
-
-  population = offspring unless generation == NUM_GENERATIONS
 end
 
-puts "Final population: " + population.fittest(5).to_s
+Population.run! if __FILE__==$0
