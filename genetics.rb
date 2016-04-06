@@ -4,8 +4,8 @@ require 'thwait'
 require 'timeout'
 require 'csv'
 
-POPULATION_SIZE = 6
-NUM_GENERATIONS = 20
+POPULATION_SIZE = 20
+NUM_GENERATIONS = 100
 CROSSOVER_RATE = 0.7
 MUTATION_RATE = 0.002
 AUTOPLAY_GAMES = 2
@@ -193,7 +193,7 @@ class Population
   end
 
   def battle!
-    chromosomes.combination(2).each_slice(6) do |slice|
+    chromosomes.combination(2).each_slice(40) do |slice|
 
       threads = []
       mutex = Mutex.new

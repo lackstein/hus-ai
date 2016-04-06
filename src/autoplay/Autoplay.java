@@ -45,7 +45,7 @@ public class Autoplay
         	String port = Integer.toString(10000 + Integer.parseInt(index));
         	        	
             ProcessBuilder server_pb = new ProcessBuilder(
-                "java", "-cp", "bin",  "boardgame.Server", "-ng", "-k", "-p", port);
+                "java", "-cp", "bin",  "boardgame.Server", "-ng", "-k", "-p", port, "-ft", "60000");
             server_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
             Process server = server_pb.start();
