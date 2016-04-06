@@ -18,7 +18,7 @@ module HMap
 
         result[hash.keys.first] = hash[hash.keys.first]
       end
-    
+
       result
     end
   end
@@ -26,32 +26,32 @@ end
 
 class Fitness
   using HMap
-  
+
   def initialize
     @scores = Hash.new { |hsh, key| hsh[key] = Hash.new { |h,k| h[k] = 0 } }
   end
-  
+
   def add_game(winner:, loser:)
     @scores[loser][winner]
     @scores[winner][loser] += 1
   end
-  
+
   def wins(player)
     @scores[player].values.reduce(0) { |acc, v| acc + v }
   end
-  
+
   def losses(player)
     @scores.map { |k, v| v[player] if v.has_key?(player) }.compact.reduce(0) { |acc, v| acc + v }
   end
-  
+
   def total_games(player)
     wins(player) + losses(player)
   end
-  
+
   def fitness(player)
     wins(player) / total_games(player).to_f
   end
-  
+
   def fitness_values
     @scores.hmap { |key, val| { key => fitness(key) } }
   end
@@ -81,7 +81,7 @@ class Chromosome
   def to_s
     self.genes.map { |gene| from_twos(gene).to_s(2) }.join(' ')
   end
-  
+
   def inspect
     "Chromosome<" + self.genes.map { |gene| from_twos(gene) }.join(', ') + ">"
   end
@@ -114,7 +114,7 @@ class Chromosome
 
       mutated
     end
-    
+
     self
   end
 
@@ -188,7 +188,7 @@ class Population
       return chromosome if total > rand_selection || index == chromosomes.count
     end
   end
-  
+
   def battle!
     chromosomes.each_with_index do |alpha, index|
       threads = []
@@ -197,21 +197,21 @@ class Population
           env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{thread})
           `#{env_vars} java -cp bin autoplay.Autoplay #{AUTOPLAY_GAMES}`
           results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{thread}.txt`
-        
+
           results = CSV.parse results
           results.each do |result|
             winner = results[4] == "AlphaPlayer" ? alpha : beta
             loser = winner == alpha ? beta : alpha
-          
+
             self.fitness.add_game winner: winner, loser: loser
           end
         end
       end
-      
+
       ThreadsWait.all_waits(*threads)
     end
   end
-  
+
 end
 
 population = Population.new
@@ -246,8 +246,8 @@ population.seed!
   end
 
   puts "Generation #{generation} - Average: #{population.average_fitness.round(2)} - Max: #{population.max_fitness}"
-  puts "Fittest: " + population.fittest
-  
+  puts "Fittest: " + population.fittest.to_s
+
   population = offspring
 end
 
