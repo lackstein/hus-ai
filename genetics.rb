@@ -246,7 +246,8 @@ population.seed!
   end
 
   puts "Generation #{generation} - Average: #{population.average_fitness.round(2)} - Max: #{population.max_fitness}"
-
+  puts "Fittest: " + population.fittest
+  
   population = offspring
 end
 
