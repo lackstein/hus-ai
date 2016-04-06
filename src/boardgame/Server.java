@@ -64,7 +64,7 @@ public class Server implements Runnable {
     protected static final int MAX_SERVERS = 10;
 
     public static final String LOG_DIR = "logs";
-    protected static final String OUTCOME_FILE = "outcomes.txt";
+    protected static String OUTCOME_FILE;
     protected static final String LOG_PREFIX = "game";
     protected static final String LOG_SUFFIX = ".log";
 
@@ -122,7 +122,7 @@ public class Server implements Runnable {
     }
 
     public static void main(String[] args) {
-        String argClass = DEFAULT_BOARDCLASS;
+    	String argClass = DEFAULT_BOARDCLASS;
         boolean argGui = true;
         boolean argKeep = false;
         Server svr = null;
@@ -138,6 +138,12 @@ public class Server implements Runnable {
                 else { printUsage(); return; }
             }
         } catch (Exception e) { printUsage(); return; }
+        
+        if(cmdArgPort >= 10000)
+        	OUTCOME_FILE = "outcomes-" + Integer.toString(cmdArgPort - 10000) + ".txt";
+        else
+        	OUTCOME_FILE = "outcomes.txt";
+        
     // Store the comand line parameters
         ServerSocket ss = null;
         do { // Keep launching servers

@@ -16,7 +16,7 @@ public class AlphaBetaSearch {
 	private int expandedNodes;
 	private LinearEval heuristic;
 
-	public AlphaBetaSearch(HusBoardState board_state, int my_id, int op_id, HashMap<String, Double> weights) {
+	public AlphaBetaSearch(HusBoardState board_state, int my_id, int op_id, HashMap<String, Integer> weights) {
 		this.board_state = board_state;
 		this.my_id = my_id;
 		this.op_id = op_id;

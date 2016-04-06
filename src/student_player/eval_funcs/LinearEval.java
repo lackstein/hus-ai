@@ -4,24 +4,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LinearEval {
-	private HashMap<String, Double> weights = new HashMap<String, Double>();
+	private HashMap<String, Integer> weights = new HashMap<String, Integer>();
 	private int player_id;
 	
 	public LinearEval(int player_id) {
 		this.player_id = player_id;
 		
-		weights.put("MY_INNER_WEIGHT", 0.75);
-		weights.put("MY_OUTER_WEIGHT", 1.1);
-		weights.put("MY_STEAL_WEIGHT", 0.5);
-		weights.put("OP_INNER_WEIGHT", 0.0);
-		weights.put("OP_OUTER_WEIGHT", 0.0);
-		weights.put("OP_STEAL_WEIGHT", -0.1);
+		weights.put("MY_INNER_WEIGHT", 75);
+		weights.put("MY_OUTER_WEIGHT", 110);
+		weights.put("MY_STEAL_WEIGHT", 50);
+		weights.put("OP_INNER_WEIGHT", 0);
+		weights.put("OP_OUTER_WEIGHT", 0);
+		weights.put("OP_STEAL_WEIGHT", -10);
 	}
 	
-	public LinearEval(int player_id, HashMap<String, Double> given_weights) {
+	public LinearEval(int player_id, HashMap<String, Integer> given_weights) {
 		this.player_id = player_id;
 		
-		for(Map.Entry<String, Double> weight : given_weights.entrySet()) {
+		for(Map.Entry<String, Integer> weight : given_weights.entrySet()) {
 			weights.put(weight.getKey(), weight.getValue());
 		}
 	}
@@ -57,14 +57,14 @@ public class LinearEval {
 			//op_steal_sum = 0;
 		}
 		
-		return getOrDefault("MY_INNER_WEIGHT", 0d) * my_inner_sum + getOrDefault("MY_OUTER_WEIGHT", 0d) * my_outer_sum +
-				getOrDefault("MY_STEAL_WEIGHT", 0d) * my_steal_sum + 
-				getOrDefault("OP_INNER_WEIGHT", 0d) * op_inner_sum + getOrDefault("OP_OUTER_WEIGHT", 0d) * op_outer_sum +
-				getOrDefault("OP_STEAL_WEIGHT", 0d) * op_steal_sum;
+		return getOrDefault("MY_INNER_WEIGHT", 0) * my_inner_sum + getOrDefault("MY_OUTER_WEIGHT", 0) * my_outer_sum +
+				getOrDefault("MY_STEAL_WEIGHT", 0) * my_steal_sum + 
+				getOrDefault("OP_INNER_WEIGHT", 0) * op_inner_sum + getOrDefault("OP_OUTER_WEIGHT", 0) * op_outer_sum +
+				getOrDefault("OP_STEAL_WEIGHT", 0) * op_steal_sum;
 	}
 	
-	private Double getOrDefault(String key, Double otherwise) {
-		Double result = this.weights.get(key);
+	private Integer getOrDefault(String key, Integer otherwise) {
+		Integer result = this.weights.get(key);
 		if(result == null)
 			return otherwise;
 		else

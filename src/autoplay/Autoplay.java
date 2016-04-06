@@ -37,19 +37,28 @@ public class Autoplay
         }
 
         try {
+        	String index = System.getenv("INDEX");
+        	if(index == null)
+        		index = "-1877";
+        	String port = Integer.toString(10000 + Integer.parseInt(index));
+        	        	
             ProcessBuilder server_pb = new ProcessBuilder(
-                "java", "-cp", "bin",  "boardgame.Server", "-ng", "-k");
+                "java", "-cp", "bin",  "boardgame.Server", "-ng", "-k", "-p", port);
             server_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 
             Process server = server_pb.start();
 
             ProcessBuilder client1_pb = new ProcessBuilder(
-                "java", "-cp", "bin", "-Xms520m", "-Xmx520m", "boardgame.Client", "student_player.StudentPlayer");
+                "java", "-cp", "bin", "-Xms520m", "-Xmx520m", "boardgame.Client", "alpha_player.AlphaPlayer", "localhost", port);
             client1_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            client1_pb.environment().put("ALPHA_GENOME", System.getenv("ALPHA_GENOME"));
+            client1_pb.environment().put("BETA_GENOME", System.getenv("BETA_GENOME"));
 
             ProcessBuilder client2_pb = new ProcessBuilder(
-                "java", "-cp", "bin", "-Xms520m", "-Xmx520m", "boardgame.Client", "hus.RandomHusPlayer");
+                "java", "-cp", "bin", "-Xms520m", "-Xmx520m", "boardgame.Client", "beta_player.BetaPlayer", "localhost", port);
             client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+            client2_pb.environment().put("ALPHA_GENOME", System.getenv("ALPHA_GENOME"));
+            client2_pb.environment().put("BETA_GENOME", System.getenv("BETA_GENOME"));
 
             for (int i=0; i < n_games; i++) {
                 System.out.println("Game "+i);
