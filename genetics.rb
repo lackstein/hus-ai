@@ -4,7 +4,7 @@ require 'thwait'
 require 'timeout'
 require 'csv'
 
-POPULATION_SIZE = 20
+POPULATION_SIZE = 10
 NUM_GENERATIONS = 100
 CROSSOVER_RATE = 0.7
 MUTATION_RATE = 0.002
