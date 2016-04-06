@@ -46,11 +46,11 @@ public class LinearEval {
 			
 			// Points for seeds I can steal from my opponent
 			if(i + my_pits[i] > op_pits.length/2 && i + my_pits[i] <= op_pits.length - 1 && my_pits[i + my_pits[i]] >= 1)
-				my_steal_sum += op_pits[i + my_pits[i]];
+				my_steal_sum += op_pits[i + my_pits[i]] + op_pits[i + my_pits[i] - op_pits.length/2];
 			
 			// Points for seeds I can lose to my opponent
 			if(i + op_pits[i] > my_pits.length/2 && i + op_pits[i] <= my_pits.length - 1 && op_pits[i + op_pits[i]] >= 1)
-				op_steal_sum += my_pits[i + op_pits[i]];
+				op_steal_sum += my_pits[i + op_pits[i]] + my_pits[i + op_pits[i] - my_pits.length/2];
 		}
 			
 		if(player_id == 0) {
