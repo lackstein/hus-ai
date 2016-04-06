@@ -191,24 +191,29 @@ class Population
 
   def battle!
     chromosomes.each_with_index do |alpha, index|
-      threads = []
-      chromosomes[index+1..-1].each_with_index do |beta, b_index|
-        threads << Thread.new(b_index) do |thread|
-          env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{thread})
-          `#{env_vars} java -cp bin autoplay.Autoplay #{AUTOPLAY_GAMES}`
-          results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{thread}.txt`
 
-          results = CSV.parse results
-          results.each do |result|
-            winner = results[4] == "AlphaPlayer" ? alpha : beta
-            loser = winner == alpha ? beta : alpha
+      chromosomes[index+1..-1].each_slice(3) do |slice|
 
-            self.fitness.add_game winner: winner, loser: loser
+        threads = []
+        slice.each_with_index do |beta, b_index|
+          threads << Thread.new(b_index) do |thread|
+            env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{thread})
+            `#{env_vars} java -cp bin autoplay.Autoplay #{AUTOPLAY_GAMES}`
+            results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{thread}.txt`
+
+            results = CSV.parse results
+            results.each do |result|
+              winner = results[4] == "AlphaPlayer" ? alpha : beta
+              loser = winner == alpha ? beta : alpha
+
+              self.fitness.add_game winner: winner, loser: loser
+            end
           end
         end
+        threads.each { |thread| thread.join }
+
       end
 
-      ThreadsWait.all_waits(*threads)
     end
   end
 
