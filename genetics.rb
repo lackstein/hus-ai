@@ -164,7 +164,7 @@ class Population
   end
 
   def total_fitness
-    fitness_values.values.inject{|total, value| total + value }
+    fitness_values.values.inject(0) {|total, value| total + value }
   end
 
   def max_fitness
@@ -180,7 +180,7 @@ class Population
   end
 
   def select
-    rand_selection = rand(total_fitness)
+    rand_selection = rand(0..total_fitness)
 
     total = 0
     index = 0
