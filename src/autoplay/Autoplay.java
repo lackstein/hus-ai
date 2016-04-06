@@ -1,6 +1,8 @@
 package autoplay;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 //Author: Lilly Tong, Eric Crawford
 //
@@ -48,48 +50,72 @@ public class Autoplay
 
             Process server = server_pb.start();
 
-            ProcessBuilder client1_pb = new ProcessBuilder(
-                "java", "-cp", "bin", "-Xms520m", "-Xmx520m", "boardgame.Client", "alpha_player.AlphaPlayer", "localhost", port);
-            client1_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+//            ProcessBuilder client1_pb = new ProcessBuilder(
+//                "java", "-cp", "bin", "-Xms520m", "-Xmx520m", "boardgame.Client", "alpha_player.AlphaPlayer", "localhost", port);
+//            client1_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 //            client1_pb.environment().put("ALPHA_GENOME", System.getenv("ALPHA_GENOME"));
 //            client1_pb.environment().put("BETA_GENOME", System.getenv("BETA_GENOME"));
 
-            ProcessBuilder client2_pb = new ProcessBuilder(
-                "java", "-cp", "bin", "-Xms520m", "-Xmx520m", "boardgame.Client", "beta_player.BetaPlayer", "localhost", port);
-            client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+//            ProcessBuilder client2_pb = new ProcessBuilder(
+//                "java", "-cp", "bin", "-Xms520m", "-Xmx520m", "boardgame.Client", "beta_player.BetaPlayer", "localhost", port);
+//            client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
 //            client2_pb.environment().put("ALPHA_GENOME", System.getenv("ALPHA_GENOME"));
 //            client2_pb.environment().put("BETA_GENOME", System.getenv("BETA_GENOME"));
-
+            
+            Map<String,String> client1 = new HashMap<String,String>();
+            client1.put("server", "hus.lackstein.com");
+            client1.put("port", port);
+            
+            Map<String,String> client2 = new HashMap<String,String>();
+            client2.putAll(client1);
+            
+            client1.put("genome", System.getenv("ALPHA_GENOME"));
+            client2.put("genome", System.getenv("BETA_GENOME"));
+            
             for (int i=0; i < n_games; i++) {
                 System.out.println("Game "+i);
-
+                
+                PlayerThread c1 = new PlayerThread(client1);
+                PlayerThread c2 = new PlayerThread(client2);
+                
+                c1.start();
+                c2.start();
+                
                 try {
-                    Thread.sleep(500);
-                } catch(InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-
-                Process client1 = ((i % 2 == 0) ? client1_pb.start() : client2_pb.start());
-
-                try {
-                    Thread.sleep(500);
-                } catch(InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-
-                Process client2 = ((i % 2 == 0) ? client2_pb.start() : client1_pb.start());
-
-                try{
-                    client1.waitFor();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                try{
-                    client2.waitFor();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//					Thread.sleep(70000);
+					c1.join();
+					c2.join();
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+                
+//                try {
+//                    Thread.sleep(500);
+//                } catch(InterruptedException ex) {
+//                    Thread.currentThread().interrupt();
+//                }
+//
+//                Process client1 = ((i % 2 == 0) ? client1_pb.start() : client2_pb.start());
+//
+//                try {
+//                    Thread.sleep(500);
+//                } catch(InterruptedException ex) {
+//                    Thread.currentThread().interrupt();
+//                }
+//
+//                Process client2 = ((i % 2 == 0) ? client2_pb.start() : client1_pb.start());
+//
+//                try{
+//                    client1.waitFor();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                try{
+//                    client2.waitFor();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
             }
 
             server.destroy();
