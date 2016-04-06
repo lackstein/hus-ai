@@ -251,4 +251,4 @@ population.seed!
   population = offspring
 end
 
-puts "Final population: " + population.fittest(5)
+puts "Final population: " + population.fittest(5).to_s
