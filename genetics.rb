@@ -3,8 +3,8 @@ require 'thread'
 require 'thwait'
 require 'csv'
 
-POPULATION_SIZE = 12
-NUM_GENERATIONS = 50
+POPULATION_SIZE = 6
+NUM_GENERATIONS = 10
 CROSSOVER_RATE = 0.7
 MUTATION_RATE = 0.002
 AUTOPLAY_GAMES = 4
@@ -253,7 +253,7 @@ population.seed!
   puts "Generation #{generation} - Average: #{population.average_fitness.round(2)} - Max: #{population.max_fitness}"
   puts "Population: " + population.fitness_values.sort { |a, b| b[1] <=> a[1] }.to_s
 
-  population = offspring
+  population = offspring unless generation == NUM_GENERATIONS
 end
 
 puts "Final population: " + population.fittest(5).to_s
