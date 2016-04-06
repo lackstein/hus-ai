@@ -83,7 +83,7 @@ class Chromosome
   end
 
   def inspect
-    "Chromosome<" + self.genes.map { |gene| from_twos(gene) }.join(', ') + ">"
+    "Chromosome<" + self.genes.map { |gene| from_twos(gene) }.join(' ') + ">"
   end
 
   def from_twos(val)

@@ -28,6 +28,7 @@ public class StudentPlayer extends HusPlayer {
         	String genome = System.getenv("P"+player_id+"_GENOME");
         	//System.out.println("Initialized with genome: " + genome);
         	if(genome == null) {
+        		// Or maybe 33 -28 -32 -50 -73 -48 ...
         		weights.put("MY_INNER_WEIGHT", 30);
         		weights.put("MY_OUTER_WEIGHT", 30);
         		weights.put("MY_STEAL_WEIGHT", 15);

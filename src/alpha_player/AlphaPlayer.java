@@ -40,7 +40,7 @@ public class AlphaPlayer extends HusPlayer {
         				"OP_INNER_WEIGHT", "OP_OUTER_WEIGHT", "OP_STEAL_WEIGHT"};
         		
         		for(int i = 0; i < keys.length; i++) {
-        			Integer weight = Integer.parseInt(pieces[i], 2);
+        			Integer weight = Integer.parseInt(pieces[i]);
         			weights.put(keys[i], weight);
         		}
         	}
