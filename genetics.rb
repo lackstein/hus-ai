@@ -193,34 +193,31 @@ class Population
   end
 
   def battle!
-    chromosomes.each_with_index do |alpha, index|
+    chromosomes.combinations(2).each_slice(6) do |slice|
 
-      chromosomes[index+1..-1].each_slice(3) do |slice|
+      threads = []
+      mutex = Mutex.new
+      slice.each_with_index do |(a, b), i|
+        threads << Thread.new(a, b, i) do |alpha, beta, index|
+          env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{index})
+          begin
+            Timeout::timeout(90 * AUTOPLAY_GAMES) {
+              `#{env_vars} ant autoplay -Dn_games=#{AUTOPLAY_GAMES}`
+            }
+          rescue Timeout::Error
+          end
+          results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{index}.txt`
 
-        threads = []
-        slice.each_with_index do |beta, b_index|
-          threads << Thread.new(b_index) do |thread|
-            env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{thread})
-            begin
-              Timeout::timeout(1 * 60 * AUTOPLAY_GAMES) {
-                `#{env_vars} java -cp bin autoplay.Autoplay #{AUTOPLAY_GAMES}`
-              }
-            rescue Timeout::Error
-            end
-            results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{thread}.txt`
+          results = CSV.parse results
+          results.each do |result|
+            winner = result[4].include?(alpha.to_s) ? alpha : beta
+            loser = winner == alpha ? beta : alpha
 
-            results = CSV.parse results
-            results.each do |result|
-              winner = result[4] == "AlphaPlayer" ? alpha : beta
-              loser = winner == alpha ? beta : alpha
-
-              self.fitness.add_game winner: winner, loser: loser
-            end
+            mutex.synchronize { self.fitness.add_game winner: winner, loser: loser }
           end
         end
-        threads.each { |thread| thread.join }
-
       end
+      threads.each { |thread| thread.join }
 
     end
   end

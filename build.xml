@@ -1,7 +1,7 @@
 <project>
     <!-- If built for 1.6, can still use with 1.7. But have to use jdk.1.7 to build. -->
     <property name="target.version" value="1.6"/>
-    <property name="run.classpath" value="bin"/>
+	<property name="run.classpath" value="bin:../aws-java-sdk-1.10.67/lib/aws-java-sdk-1.10.67.jar:../aws-java-sdk-1.10.67/lib/aws-java-sdk-flow-build-tools-1.10.67.jar:../aws-java-sdk-1.10.67/lib/aws-lambda-java-core.jar:../aws-java-sdk-1.10.67/third-party/lib/aspectjrt-1.8.2.jar:../aws-java-sdk-1.10.67/third-party/lib/aspectjweaver.jar:../aws-java-sdk-1.10.67/third-party/lib/commons-codec-1.6.jar:../aws-java-sdk-1.10.67/third-party/lib/commons-logging-1.1.3.jar:../aws-java-sdk-1.10.67/third-party/lib/freemarker-2.3.9.jar:../aws-java-sdk-1.10.67/third-party/lib/httpclient-4.3.6.jar:../aws-java-sdk-1.10.67/third-party/lib/httpcore-4.3.3.jar:../aws-java-sdk-1.10.67/third-party/lib/jackson-annotations-2.5.0.jar:../aws-java-sdk-1.10.67/third-party/lib/jackson-core-2.5.3.jar:../aws-java-sdk-1.10.67/third-party/lib/jackson-databind-2.5.3.jar:../aws-java-sdk-1.10.67/third-party/lib/jackson-dataformat-cbor-2.5.3.jar:../aws-java-sdk-1.10.67/third-party/lib/javax.mail-api-1.4.6.jar:../aws-java-sdk-1.10.67/third-party/lib/joda-time-2.8.1.jar:../aws-java-sdk-1.10.67/third-party/lib/spring-beans-3.0.7.RELEASE.jar:../aws-java-sdk-1.10.67/third-party/lib/spring-context-3.0.7.RELEASE.jar:../aws-java-sdk-1.10.67/third-party/lib/spring-core-3.0.7.RELEASE.jar:../aws-java-sdk-1.10.67/third-party/lib/spring-test-3.0.7.RELEASE.jar"/>
     <property name="n_games" value="2"/>
 
     <target name="clean">
@@ -11,7 +11,7 @@
     <!-- Compile ======================================================== -->
     <target name="compile">
         <mkdir dir="bin"/>
-        <javac srcdir="src" destdir="bin" debug="false" source="${target.version}" target="${target.version}"/>
+    	<javac srcdir="src" destdir="bin" debug="false" source="${target.version}" target="${target.version}" classpath="${run.classpath}"/>
     </target>
 
     <target name="debug">
@@ -41,7 +41,7 @@
     <!-- Run autoplay ====================================================== -->
     <!-- Can specify a different value for n_games by supplying -Dn_games=10 at command line -->
     <target name="autoplay" depends="compile">
-        <java classpath="bin" classname="autoplay.Autoplay" fork="true">
+    	<java classpath="${run.classpath}" classname="autoplay.Autoplay" fork="true">
             <arg value="${n_games}"/>
         </java>
     </target>
