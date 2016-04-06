@@ -79,7 +79,7 @@ class Chromosome
   end
 
   def to_s
-    self.genes.map { |gene| from_twos(gene).to_s(2) }.join(' ')
+    self.genes.map { |gene| from_twos(gene) }.join(' ')
   end
 
   def inspect
