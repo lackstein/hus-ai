@@ -28,9 +28,9 @@ public class StudentPlayer extends HusPlayer {
         	String genome = System.getenv("P"+player_id+"_GENOME");
         	//System.out.println("Initialized with genome: " + genome);
         	if(genome == null) {
-        		weights.put("MY_INNER_WEIGHT", 75);
-        		weights.put("MY_OUTER_WEIGHT", 1100);
-        		weights.put("MY_STEAL_WEIGHT", 50);
+        		weights.put("MY_INNER_WEIGHT", 30);
+        		weights.put("MY_OUTER_WEIGHT", 30);
+        		weights.put("MY_STEAL_WEIGHT", 15);
         		weights.put("OP_INNER_WEIGHT", 0);
         		weights.put("OP_OUTER_WEIGHT", 0);
         		weights.put("OP_STEAL_WEIGHT", -10);

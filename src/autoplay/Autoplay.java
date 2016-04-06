@@ -51,20 +51,20 @@ public class Autoplay
             ProcessBuilder client1_pb = new ProcessBuilder(
                 "java", "-cp", "bin", "-Xms520m", "-Xmx520m", "boardgame.Client", "alpha_player.AlphaPlayer", "localhost", port);
             client1_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-            client1_pb.environment().put("ALPHA_GENOME", System.getenv("ALPHA_GENOME"));
-            client1_pb.environment().put("BETA_GENOME", System.getenv("BETA_GENOME"));
+//            client1_pb.environment().put("ALPHA_GENOME", System.getenv("ALPHA_GENOME"));
+//            client1_pb.environment().put("BETA_GENOME", System.getenv("BETA_GENOME"));
 
             ProcessBuilder client2_pb = new ProcessBuilder(
                 "java", "-cp", "bin", "-Xms520m", "-Xmx520m", "boardgame.Client", "beta_player.BetaPlayer", "localhost", port);
             client2_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-            client2_pb.environment().put("ALPHA_GENOME", System.getenv("ALPHA_GENOME"));
-            client2_pb.environment().put("BETA_GENOME", System.getenv("BETA_GENOME"));
+//            client2_pb.environment().put("ALPHA_GENOME", System.getenv("ALPHA_GENOME"));
+//            client2_pb.environment().put("BETA_GENOME", System.getenv("BETA_GENOME"));
 
             for (int i=0; i < n_games; i++) {
                 System.out.println("Game "+i);
 
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(50);
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }
@@ -72,7 +72,7 @@ public class Autoplay
                 Process client1 = ((i % 2 == 0) ? client1_pb.start() : client2_pb.start());
 
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(50);
                 } catch(InterruptedException ex) {
                     Thread.currentThread().interrupt();
                 }

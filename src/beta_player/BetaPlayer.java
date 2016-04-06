@@ -28,8 +28,8 @@ public class BetaPlayer extends HusPlayer {
         	String genome = System.getenv("BETA_GENOME");
         	//System.out.println("Initialized with genome: " + genome);
         	if(genome == null) {
-        		weights.put("MY_INNER_WEIGHT", 75);
-        		weights.put("MY_OUTER_WEIGHT", 1100);
+        		weights.put("MY_INNER_WEIGHT", 100);
+        		weights.put("MY_OUTER_WEIGHT", 80);
         		weights.put("MY_STEAL_WEIGHT", 50);
         		weights.put("OP_INNER_WEIGHT", 0);
         		weights.put("OP_OUTER_WEIGHT", 0);
