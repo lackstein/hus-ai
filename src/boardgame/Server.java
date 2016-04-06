@@ -139,7 +139,7 @@ public class Server implements Runnable {
             }
         } catch (Exception e) { printUsage(); return; }
         
-        if(cmdArgPort >= 10000)
+        if(cmdArgPort >= 10000 && cmdArgPort <= 11000)
         	OUTCOME_FILE = "outcomes-" + Integer.toString(cmdArgPort - 10000) + ".txt";
         else
         	OUTCOME_FILE = "outcomes.txt";
