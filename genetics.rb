@@ -202,7 +202,7 @@ class Population
           threads << Thread.new(b_index) do |thread|
             env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{thread})
             begin
-              Timeout::timeout(3 * 60 * AUTOPLAY_GAMES) {
+              Timeout::timeout(1 * 60 * AUTOPLAY_GAMES) {
                 `#{env_vars} java -cp bin autoplay.Autoplay #{AUTOPLAY_GAMES}`
               }
             rescue Timeout::Error
