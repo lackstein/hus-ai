@@ -78,6 +78,12 @@ public class Autoplay
                 PlayerThread c1 = new PlayerThread(client1);
                 PlayerThread c2 = new PlayerThread(client2);
                 
+                try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+                
                 c1.start();
                 c2.start();
                 
