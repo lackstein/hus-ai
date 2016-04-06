@@ -41,7 +41,7 @@ public class AlphaBetaSearch {
 			}
 		}
 		
-		System.out.println("Alpha " + resultValue + " / Expanded " + this.expandedNodes + " nodes");
+		//System.out.println("Alpha " + resultValue + " / Expanded " + this.expandedNodes + " nodes");
 		
 		return result;
 	}
