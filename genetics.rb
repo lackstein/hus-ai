@@ -193,7 +193,7 @@ class Population
   end
 
   def battle!
-    chromosomes.combinations(2).each_slice(6) do |slice|
+    chromosomes.combination(2).each_slice(6) do |slice|
 
       threads = []
       mutex = Mutex.new
