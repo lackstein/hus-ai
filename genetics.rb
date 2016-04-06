@@ -3,10 +3,11 @@ require 'thread'
 require 'thwait'
 require 'csv'
 
-POPULATION_SIZE = 6
-NUM_GENERATIONS = 5
+POPULATION_SIZE = 20
+NUM_GENERATIONS = 100
 CROSSOVER_RATE = 0.7
 MUTATION_RATE = 0.002
+AUTOPLAY_GAMES = 4
 
 module HMap
   refine Hash do
@@ -194,8 +195,8 @@ class Population
       chromosomes[index+1..-1].each_with_index do |beta, b_index|
         threads << Thread.new(b_index) do |thread|
           env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{thread})
-          `#{env_vars} java -cp bin autoplay.Autoplay 2`
-          results = `tail -n 10 logs/outcomes-#{thread}.txt`
+          `#{env_vars} java -cp bin autoplay.Autoplay #{AUTOPLAY_GAMES}`
+          results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{thread}.txt`
         
           results = CSV.parse results
           results.each do |result|
