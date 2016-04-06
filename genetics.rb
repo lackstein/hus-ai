@@ -4,7 +4,7 @@ require 'thwait'
 require 'timeout'
 require 'csv'
 
-POPULATION_SIZE = 10
+POPULATION_SIZE = 12
 NUM_GENERATIONS = 100
 CROSSOVER_RATE = 0.7
 MUTATION_RATE = 0.002
@@ -193,7 +193,9 @@ class Population
   end
 
   def battle!
-    chromosomes.combination(2).each_slice(40) do |slice|
+    combinations = chromosomes.combination(2)
+    # slice_size = combinations.size >= 30 ? (combinations.size / Math.log(combinations.size)).ceil : 10
+    combinations.each_slice(30) do |slice|
 
       threads = []
       mutex = Mutex.new
@@ -248,7 +250,7 @@ class Population
         child1.mutate!
         child2.mutate!
 
-        if POPULATION_SIZE.even?
+        if POPULATION_SIZE.even? && offspring.count.even?
           offspring.chromosomes << child1 << child2
         else
           offspring.chromosomes << [child1, child2].sample
