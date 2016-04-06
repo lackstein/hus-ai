@@ -1,7 +1,7 @@
 # Adapted from http://mattmazur.com/2013/08/18/a-simple-genetic-algorithm-written-in-ruby/
 require 'thread'
 require 'thwait'
-require 'CSV'
+require 'csv'
 
 POPULATION_SIZE = 6
 NUM_GENERATIONS = 5
