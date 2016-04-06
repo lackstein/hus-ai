@@ -1,6 +1,7 @@
 # Adapted from http://mattmazur.com/2013/08/18/a-simple-genetic-algorithm-written-in-ruby/
 require 'thread'
 require 'thwait'
+require 'timeout'
 require 'csv'
 
 POPULATION_SIZE = 6
@@ -200,7 +201,12 @@ class Population
         slice.each_with_index do |beta, b_index|
           threads << Thread.new(b_index) do |thread|
             env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{thread})
-            `#{env_vars} java -cp bin autoplay.Autoplay #{AUTOPLAY_GAMES}`
+            begin
+              Timeout::timeout(3 * 60 * AUTOPLAY_GAMES) {
+                `#{env_vars} java -cp bin autoplay.Autoplay #{AUTOPLAY_GAMES}`
+              }
+            rescue Timeout::Error
+            end
             results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{thread}.txt`
 
             results = CSV.parse results
