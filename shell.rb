@@ -5,6 +5,7 @@ require 'logger'
 
 log_name = "#{Time.now.to_i}.txt"
 logger = Logger.new "/var/www/html/logs/#{log_name}"
+data = {:out => [], :err => []}
 port = rand(1000) + 20000
 cmd = "cd ~/hus-ai/; LOGNAME=#{log_name} java -cp bin boardgame.Server -ng -p #{port}"
 
@@ -21,6 +22,9 @@ Open3.popen3(cmd) do |stdin, stdout, stderr, thread|
   { :out => stdout, :err => stderr }.each do |key, stream|
     Thread.new do
       until (raw_line = stream.gets).nil? do
+        parsed_line = Hash[:timestamp => Time.now, :line => "#{raw_line}"]
+        data[key].push parsed_line
+                
         logger.info raw_line
         puts raw_line
       end
@@ -36,6 +40,15 @@ Open3.popen3(cmd) do |stdin, stdout, stderr, thread|
   Signal.trap("TERM") {
     thread.exit
   }
-
+  
+  Thread.new do
+    loop do
+      if Time.now - 900 > data[:out].last[:timestamp] || !thread.alive?
+        thread.exit
+        break
+      end
+    end
+  end
+  
   thread.join # don't exit until the external process is done
 end
