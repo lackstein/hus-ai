@@ -202,7 +202,7 @@ class Population
     mutex = Mutex.new
     
     while(!combinations.empty?) do
-      if Thread.list.size > 40
+      if threads.select { |t| t.alive? }.size > 30
         sleep 10
         next
       end
