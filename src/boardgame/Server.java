@@ -61,7 +61,7 @@ public class Server implements Runnable {
 
     protected static final boolean DBGNET = false;
     protected static final boolean DUMPBOARD = false;
-    protected static final int MAX_SERVERS = 50;
+    protected static final int MAX_SERVERS = 220;
 
     public static final String LOG_DIR = "logs";
     protected static String OUTCOME_FILE = "outcomes.txt";

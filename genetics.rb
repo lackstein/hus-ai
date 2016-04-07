@@ -197,7 +197,7 @@ class Population
   def battle!
     combinations = chromosomes.combination(2).to_a
 
-    combinations.each_slice(40) do |slice|
+    combinations.each_slice(100) do |slice|
 
       threads = []
       slice.each_with_index do |(a, b), i|
