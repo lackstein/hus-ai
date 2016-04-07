@@ -60,11 +60,6 @@ class Fitness
   end
 end
 
-f = Fitness.new
-f.add_game winner: 1, loser: 2
-f.add_game winner: 1, loser: 3
-f.add_game winner: 3, loser: 2
-
 class Chromosome
 
   attr_accessor :genes
@@ -198,54 +193,45 @@ class Population
   def battle!
     combinations = chromosomes.combination(2).to_a
 
-    i = 0
-    threads = []
-    mutex = Mutex.new
+    combinations.each_slice(20) do |slice|
 
-    while(!combinations.empty?) do
-      if threads.select { |t| t.alive? }.size > 10
-        sleep 10
-        next
-      end
+      threads = []
+      mutex = Mutex.new
+      slice.each_with_index do |(a, b), i|
+        threads << Thread.new(a, b, i) do |alpha, beta, index|
+          env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{index})
+          begin
+            Timeout::timeout(10 + 3 * 60 * AUTOPLAY_GAMES) {
+              `#{env_vars} java -cp "#{CLASS_PATH}" autoplay.Autoplay #{AUTOPLAY_GAMES}`
+            }
+          rescue Timeout::Error
+          else
+            results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{index}.txt`
 
-      a, b = combinations.pop
+            if results.blank? || !results.include?(alpha.to_s) && !results.include?(beta.to_s)
+              combinations.push([alpha, beta])
+              next
+            end
 
-      threads << Thread.new(a, b, i) do |alpha, beta, index|
-        env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{index})
-        begin
-          Timeout::timeout(10 + 3 * 60 * AUTOPLAY_GAMES) {
-            `#{env_vars} java -cp "#{CLASS_PATH}" autoplay.Autoplay #{AUTOPLAY_GAMES}`
-          }
-        rescue Timeout::Error
-        else
-          results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{index}.txt`
+            results = CSV.parse results
 
-          if results.blank? || !results.include?(alpha.to_s) && !results.include?(beta.to_s)
-            combinations.push([alpha, beta])
-            next
-          end
+            if results.size != 2 || !results.all? { |r| r.any? { |a| a.include? alpha.to_s } } || !results.all? { |r| r.any? { |a| a.include? beta.to_s } }
+              combinations.push([alpha, beta])
+              next
+            end
 
-          results = CSV.parse results
+            results.each do |result|
+              winner = result[4].include?(alpha.to_s) ? alpha : beta
+              loser = winner == alpha ? beta : alpha
 
-          if results.size != 2 || !results.all? { |r| r.any? { |a| a.include? alpha.to_s } } || !results.all? { |r| r.any? { |a| a.include? beta.to_s } }
-            combinations.push([alpha, beta])
-            next
-          end
-
-          results.each do |result|
-            winner = result[4].include?(alpha.to_s) ? alpha : beta
-            loser = winner == alpha ? beta : alpha
-
-            mutex.synchronize { self.fitness.add_game winner: winner, loser: loser }
+              mutex.synchronize { self.fitness.add_game winner: winner, loser: loser }
+            end
           end
         end
       end
+      threads.each { |thread| thread.join }
 
-      i += 1
-      sleep 1
     end
-
-    ThreadsWait.all_waits(*threads)
   end
 
   def self.run!
