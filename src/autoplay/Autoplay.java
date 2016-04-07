@@ -46,11 +46,11 @@ public class Autoplay
         		index = "-1877";
         	String port = Integer.toString(10000 + Integer.parseInt(index));
         	        	
-            ProcessBuilder server_pb = new ProcessBuilder(
-                "java", "-cp", "bin",  "boardgame.Server", "-ng", "-k", "-p", port, "-ft", "60000");
-            server_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-
-            Process server = server_pb.start();
+//            ProcessBuilder server_pb = new ProcessBuilder(
+//                "java", "-cp", "bin",  "boardgame.Server", "-ng", "-k", "-p", port, "-ft", "60000");
+//            server_pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+//
+//            Process server = server_pb.start();
             
 //            if(!LAMBDA) {
 	            ProcessBuilder client1_pb = new ProcessBuilder(
@@ -136,7 +136,7 @@ public class Autoplay
                 }
             }
 
-            server.destroy();
+//            server.destroy();
 
         } catch (IOException e) {
             e.printStackTrace();

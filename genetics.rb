@@ -190,47 +190,41 @@ class Population
     end
   end
 
+  def find(str)
+    chromosomes.select { |c| c.to_s == str }.first
+  end
+
   def battle!
     combinations = chromosomes.combination(2).to_a
 
     combinations.each_slice(20) do |slice|
 
       threads = []
-      mutex = Mutex.new
       slice.each_with_index do |(a, b), i|
         threads << Thread.new(a, b, i) do |alpha, beta, index|
-          env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{index})
+          env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}") # INDEX=#{index}
           begin
             Timeout::timeout(10 + 3 * 60 * AUTOPLAY_GAMES) {
               `#{env_vars} java -cp "#{CLASS_PATH}" autoplay.Autoplay #{AUTOPLAY_GAMES}`
             }
           rescue Timeout::Error
-          else
-            results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{index}.txt`
-
-            if results.empty? || !results.include?(alpha.to_s) && !results.include?(beta.to_s)
-              combinations.push([alpha, beta])
-              next
-            end
-
-            results = CSV.parse results
-
-            if results.size != AUTOPLAY_GAMES || !results.all? { |r| r.any? { |a| a.include? alpha.to_s } } || !results.all? { |r| r.any? { |a| a.include? beta.to_s } }
-              combinations.push([alpha, beta])
-              next
-            end
-
-            results.each do |result|
-              winner = result[4].include?(alpha.to_s) ? alpha : beta
-              loser = winner == alpha ? beta : alpha
-
-              mutex.synchronize { self.fitness.add_game winner: winner, loser: loser }
-            end
+            combinations.push([alpha, beta])
+            next
           end
         end
       end
       threads.each { |thread| thread.join }
 
+    end
+
+    results = CSV.parse 'logs/outcomes.txt'
+
+    results.each do |result|
+      player1, player2 = find(result[1].gsub(/.*: /, '')), find(result[2].gsub(/.*: /, ''))
+      winner = result[4].include?(player1.to_s) ? player1 : player2
+      loser = winner == player1 ? player2 : player1
+
+      self.fitness.add_game winner: winner, loser: loser
     end
   end
 

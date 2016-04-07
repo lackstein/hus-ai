@@ -61,10 +61,10 @@ public class Server implements Runnable {
 
     protected static final boolean DBGNET = false;
     protected static final boolean DUMPBOARD = false;
-    protected static final int MAX_SERVERS = 10;
+    protected static final int MAX_SERVERS = 30;
 
     public static final String LOG_DIR = "logs";
-    protected static String OUTCOME_FILE;
+    protected static String OUTCOME_FILE = "outcomes.txt";
     protected static final String LOG_PREFIX = "game";
     protected static final String LOG_SUFFIX = ".log";
 
@@ -138,11 +138,6 @@ public class Server implements Runnable {
                 else { printUsage(); return; }
             }
         } catch (Exception e) { printUsage(); return; }
-        
-        if(cmdArgPort >= 10000 && cmdArgPort <= 11000)
-        	OUTCOME_FILE = "outcomes-" + Integer.toString(cmdArgPort - 10000) + ".txt";
-        else
-        	OUTCOME_FILE = "outcomes.txt";
         
     // Store the comand line parameters
         ServerSocket ss = null;
