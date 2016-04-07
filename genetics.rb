@@ -265,11 +265,7 @@ class Population
         child1.mutate!
         child2.mutate!
 
-        if POPULATION_SIZE.even? && offspring.count.even?
-          offspring.chromosomes << child1 << child2
-        else
-          offspring.chromosomes << [child1, child2].sample
-        end
+        offspring.chromosomes << [child1, child2].sample
       end
 
       puts "Generation #{generation} - Average: #{population.average_fitness.round(2)} - Max: #{population.max_fitness}"
