@@ -77,9 +77,10 @@ class Chromosome
       end
     else
       raise("Must have 6 genes") unless genes.size == 6
-      self.genes = genes.map do |gene|
-        8.downto(0).map { |bit| gene.to_i[bit] }.join
-      end
+      self.genes = genes
+      # self.genes = genes.map do |gene|
+      #   8.downto(0).map { |bit| gene.to_i[bit] }.join
+      # end
     end
   end
 
