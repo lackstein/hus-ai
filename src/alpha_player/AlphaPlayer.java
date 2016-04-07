@@ -17,7 +17,7 @@ public class AlphaPlayer extends HusPlayer {
      * competition uses to associate you with your agent.
      * The constructor should do nothing else. */
     public AlphaPlayer() {
-    	super("BetaPlayer: " + System.getenv("ALPHA_GENOME"));
+    	super("AlphaPlayer: " + System.getenv("ALPHA_GENOME"));
     	String genome = System.getenv("ALPHA_GENOME");
     	//System.out.println("Initialized with genome: " + genome);
     	if(genome == null) {

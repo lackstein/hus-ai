@@ -5,7 +5,7 @@ require 'timeout'
 require 'csv'
 
 POPULATION_SIZE = 12
-NUM_GENERATIONS = 100
+NUM_GENERATIONS = 1
 CROSSOVER_RATE = 0.7
 MUTATION_RATE = 0.002
 AUTOPLAY_GAMES = 2
@@ -204,7 +204,7 @@ class Population
         threads << Thread.new(a, b, i) do |alpha, beta, index|
           env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}") # INDEX=#{index}
           begin
-            Timeout::timeout(10 + 3 * 60 * AUTOPLAY_GAMES) {
+            Timeout::timeout(10 + 1 * 60 * AUTOPLAY_GAMES) {
               `#{env_vars} java -cp "#{CLASS_PATH}" autoplay.Autoplay #{AUTOPLAY_GAMES}`
             }
           rescue Timeout::Error
