@@ -208,7 +208,7 @@ class Population
           env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{index})
           begin
             Timeout::timeout(10 + 3 * 60 * AUTOPLAY_GAMES) {
-              `#{env_vars} java -cp #{CLASS_PATH} autoplay.AutoPlay #{AUTOPLAY_GAMES}`
+              `#{env_vars} java -cp #{CLASS_PATH} autoplay.Autoplay #{AUTOPLAY_GAMES}`
             }
           rescue Timeout::Error
           end
