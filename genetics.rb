@@ -120,10 +120,10 @@ class Chromosome
   end
 
   def &(other)
-    locus = rand(genes.length)
+    gene_pool = genes.zip(other.genes)
 
-    child1 = genes[0, locus] + other.genes[locus, other.genes.length]
-    child2 = other.genes[0, locus] + genes[locus, other.genes.length]
+    child1 = gene_pool.map { |gene| gene.sample }
+    child2 = gene_pool.map { |gene| gene.sample }
 
     return [
       Chromosome.new(child1),
