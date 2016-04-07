@@ -4,11 +4,11 @@ require 'thwait'
 require 'timeout'
 require 'csv'
 
-POPULATION_SIZE = 4
-NUM_GENERATIONS = 4
+POPULATION_SIZE = 20
+NUM_GENERATIONS = 2
 CROSSOVER_RATE = 0.7
 MUTATION_RATE = 0.002
-AUTOPLAY_GAMES = 2
+AUTOPLAY_GAMES = 1
 
 CLASS_PATH = "bin:../aws-java-sdk-1.10.67/lib/aws-java-sdk-1.10.67.jar:../aws-java-sdk-1.10.67/lib/aws-java-sdk-flow-build-tools-1.10.67.jar:../aws-java-sdk-1.10.67/lib/aws-lambda-java-core.jar:../aws-java-sdk-1.10.67/third-party/lib/aspectjrt-1.8.2.jar:../aws-java-sdk-1.10.67/third-party/lib/aspectjweaver.jar:../aws-java-sdk-1.10.67/third-party/lib/commons-codec-1.6.jar:../aws-java-sdk-1.10.67/third-party/lib/commons-logging-1.1.3.jar:../aws-java-sdk-1.10.67/third-party/lib/freemarker-2.3.9.jar:../aws-java-sdk-1.10.67/third-party/lib/httpclient-4.3.6.jar:../aws-java-sdk-1.10.67/third-party/lib/httpcore-4.3.3.jar:../aws-java-sdk-1.10.67/third-party/lib/jackson-annotations-2.5.0.jar:../aws-java-sdk-1.10.67/third-party/lib/jackson-core-2.5.3.jar:../aws-java-sdk-1.10.67/third-party/lib/jackson-databind-2.5.3.jar:../aws-java-sdk-1.10.67/third-party/lib/jackson-dataformat-cbor-2.5.3.jar:../aws-java-sdk-1.10.67/third-party/lib/javax.mail-api-1.4.6.jar:../aws-java-sdk-1.10.67/third-party/lib/joda-time-2.8.1.jar:../aws-java-sdk-1.10.67/third-party/lib/spring-beans-3.0.7.RELEASE.jar:../aws-java-sdk-1.10.67/third-party/lib/spring-context-3.0.7.RELEASE.jar:../aws-java-sdk-1.10.67/third-party/lib/spring-core-3.0.7.RELEASE.jar:../aws-java-sdk-1.10.67/third-party/lib/spring-test-3.0.7.RELEASE.jar"
 
@@ -274,7 +274,7 @@ class Population
       population = offspring unless generation == NUM_GENERATIONS
     end
 
-    puts "Final population: " + population.fittest(5).to_s
+    puts "Final population: " + population.fitness_values.sort { |a, b| b[1] <=> a[1] }.to_s
   end
 end
 
