@@ -212,17 +212,22 @@ class Population
             next
           end
         end
+
+        sleep 2
       end
       threads.each { |thread| thread.join }
 
     end
 
-    results = CSV.parse 'logs/outcomes.txt'
+    results = CSV.read 'logs/outcomes.txt'
 
     results.each do |result|
       player1, player2 = find(result[1].gsub(/.*: /, '')), find(result[2].gsub(/.*: /, ''))
-      winner = result[4].include?(player1.to_s) ? player1 : player2
-      loser = winner == player1 ? player2 : player1
+      winner_text = result[4].gsub(/.*: /, '')
+
+      next if player1.nil? || player2.nil? || ![player1.to_s, player2.to_s].include?(winner_text)
+
+      winner, loser = winner_text == player1.to_s ? [player1, player2] : [player2, player1]
 
       self.fitness.add_game winner: winner, loser: loser
     end
