@@ -23,7 +23,7 @@ import java.util.Map;
 //
 public class Autoplay
 {
-	public static final boolean LAMBDA = false;
+	public static final boolean LAMBDA = true;
 	
     public static void main(String args[])
     {
@@ -70,7 +70,7 @@ public class Autoplay
             Map<String,String> l_client2 = new HashMap<String,String>();
             if (LAMBDA) {
 	            
-	            l_client1.put("server", "52.28.237.217");
+	            l_client1.put("server", "52.28.211.135");
 	            l_client1.put("port", port);
 	            
 	            
