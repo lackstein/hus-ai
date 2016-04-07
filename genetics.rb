@@ -236,7 +236,7 @@ class Population
     end
 
     # Empty the outcomes file for the next run
-    File.open('logs/outcomes.txt') { |file| file.write '' }
+    File.open('logs/outcomes.txt', 'w') { |file| file.write '' }
   end
 
   def self.run!
