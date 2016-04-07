@@ -23,7 +23,7 @@ import java.util.Map;
 //
 public class Autoplay
 {
-	public static final boolean LAMBDA = true;
+	public static final boolean LAMBDA = false;
 	
     public static void main(String args[])
     {
