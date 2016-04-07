@@ -4,8 +4,8 @@ require 'thwait'
 require 'timeout'
 require 'csv'
 
-POPULATION_SIZE = 12
-NUM_GENERATIONS = 1
+POPULATION_SIZE = 4
+NUM_GENERATIONS = 4
 CROSSOVER_RATE = 0.7
 MUTATION_RATE = 0.002
 AUTOPLAY_GAMES = 2
@@ -222,6 +222,9 @@ class Population
     results = CSV.read 'logs/outcomes.txt'
 
     results.each do |result|
+      # If the game ended for some random reason, let's skip it
+      next unless result[7].nil?
+
       player1, player2 = find(result[1].gsub(/.*: /, '')), find(result[2].gsub(/.*: /, ''))
       winner_text = result[4].gsub(/.*: /, '')
 
@@ -229,8 +232,11 @@ class Population
 
       winner, loser = winner_text == player1.to_s ? [player1, player2] : [player2, player1]
 
-      self.fitness.add_game winner: winner, loser: loser
+      fitness.add_game winner: winner, loser: loser
     end
+
+    # Empty the outcomes file for the next run
+    File.open('logs/outcomes.txt') { |file| file.write '' }
   end
 
   def self.run!
