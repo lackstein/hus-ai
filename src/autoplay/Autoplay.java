@@ -63,7 +63,7 @@ public class Autoplay
 //            client2_pb.environment().put("BETA_GENOME", System.getenv("BETA_GENOME"));
             
             Map<String,String> client1 = new HashMap<String,String>();
-            client1.put("server", "hus.lackstein.com");
+            client1.put("server", "52.28.237.217");
             client1.put("port", port);
             
             Map<String,String> client2 = new HashMap<String,String>();
