@@ -268,6 +268,10 @@ class Population
         offspring.chromosomes << [child1, child2].sample
       end
 
+      while offspring.count < POPULATION_SIZE
+        offspring.chromosomes << Chromosome.new
+      end
+
       puts "Generation #{generation} - Average: #{population.average_fitness.round(2)} - Max: #{population.max_fitness}"
       puts "Population: " + population.fitness_values.sort { |a, b| b[1] <=> a[1] }.to_s
 
