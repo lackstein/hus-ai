@@ -208,14 +208,14 @@ class Population
           else
             results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{index}.txt`
 
-            if results.blank? || !results.include?(alpha.to_s) && !results.include?(beta.to_s)
+            if results.empty? || !results.include?(alpha.to_s) && !results.include?(beta.to_s)
               combinations.push([alpha, beta])
               next
             end
 
             results = CSV.parse results
 
-            if results.size != 2 || !results.all? { |r| r.any? { |a| a.include? alpha.to_s } } || !results.all? { |r| r.any? { |a| a.include? beta.to_s } }
+            if results.size != AUTOPLAY_GAMES || !results.all? { |r| r.any? { |a| a.include? alpha.to_s } } || !results.all? { |r| r.any? { |a| a.include? beta.to_s } }
               combinations.push([alpha, beta])
               next
             end
