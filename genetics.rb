@@ -213,7 +213,7 @@ class Population
           end
         end
 
-        sleep 2
+        sleep 1
       end
       threads.each { |thread| thread.join }
 
