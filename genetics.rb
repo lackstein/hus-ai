@@ -197,7 +197,7 @@ class Population
   def battle!
     combinations = chromosomes.combination(2)
     # slice_size = combinations.size >= 30 ? (combinations.size / Math.log(combinations.size)).ceil : 10
-    combinations.each_slice(80) do |slice|
+    combinations.each_slice(40) do |slice|
 
       threads = []
       mutex = Mutex.new
