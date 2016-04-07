@@ -196,19 +196,19 @@ class Population
 
   def battle!
     combinations = chromosomes.combination(2).to_a
-    
+
     i = 0
     threads = []
     mutex = Mutex.new
-    
+
     while(!combinations.empty?) do
-      if threads.select { |t| t.alive? }.size > 30
+      if threads.select { |t| t.alive? }.size > 10
         sleep 10
         next
       end
-      
+
       a, b = combinations.pop
-      
+
       threads << Thread.new(a, b, i) do |alpha, beta, index|
         env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{index})
         begin
@@ -227,11 +227,11 @@ class Population
           mutex.synchronize { self.fitness.add_game winner: winner, loser: loser }
         end
       end
-      
+
       i += 1
       sleep 1
     end
-    
+
     threads.each { |thread| thread.join }
   end
 
