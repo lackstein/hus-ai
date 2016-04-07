@@ -195,35 +195,44 @@ class Population
   end
 
   def battle!
-    combinations = chromosomes.combination(2)
-    # slice_size = combinations.size >= 30 ? (combinations.size / Math.log(combinations.size)).ceil : 10
-    combinations.each_slice(40) do |slice|
+    combinations = chromosomes.combination(2).to_a
+    
+    i = 0
+    threads = []
+    mutex = Mutex.new
+    
+    while(!combinations.empty?) do
+      if Thread.list.size > 40
+        sleep 10
+        next
+      end
+      
+      a, b = combinations.pop
+      
+      threads << Thread.new(a, b, i) do |alpha, beta, index|
+        env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{index})
+        begin
+          Timeout::timeout(10 + 3 * 60 * AUTOPLAY_GAMES) {
+            `#{env_vars} java -cp "#{CLASS_PATH}" autoplay.Autoplay #{AUTOPLAY_GAMES}`
+          }
+        rescue Timeout::Error
+        end
+        results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{index}.txt`
 
-      threads = []
-      mutex = Mutex.new
-      slice.each_with_index do |(a, b), i|
-        threads << Thread.new(a, b, i) do |alpha, beta, index|
-          env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX=#{index})
-          begin
-            Timeout::timeout(10 + 3 * 60 * AUTOPLAY_GAMES) {
-              `#{env_vars} java -cp "#{CLASS_PATH}" autoplay.Autoplay #{AUTOPLAY_GAMES}`
-            }
-          rescue Timeout::Error
-          end
-          results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{index}.txt`
+        results = CSV.parse results
+        results.each do |result|
+          winner = result[4].include?(alpha.to_s) ? alpha : beta
+          loser = winner == alpha ? beta : alpha
 
-          results = CSV.parse results
-          results.each do |result|
-            winner = result[4].include?(alpha.to_s) ? alpha : beta
-            loser = winner == alpha ? beta : alpha
-
-            mutex.synchronize { self.fitness.add_game winner: winner, loser: loser }
-          end
+          mutex.synchronize { self.fitness.add_game winner: winner, loser: loser }
         end
       end
-      threads.each { |thread| thread.join }
-
+      
+      i += 1
+      sleep 1
     end
+    
+    threads.each { |thread| thread.join }
   end
 
   def self.run!
