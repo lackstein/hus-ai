@@ -216,15 +216,19 @@ class Population
             `#{env_vars} java -cp "#{CLASS_PATH}" autoplay.Autoplay #{AUTOPLAY_GAMES}`
           }
         rescue Timeout::Error
-        end
-        results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{index}.txt`
+        else
+          results = `tail -n #{AUTOPLAY_GAMES} logs/outcomes-#{index}.txt`
 
-        results = CSV.parse results
-        results.each do |result|
-          winner = result[4].include?(alpha.to_s) ? alpha : beta
-          loser = winner == alpha ? beta : alpha
+          next if results.blank?
 
-          mutex.synchronize { self.fitness.add_game winner: winner, loser: loser }
+          results = CSV.parse results
+
+          results.each do |result|
+            winner = result[4].include?(alpha.to_s) ? alpha : beta
+            loser = winner == alpha ? beta : alpha
+
+            mutex.synchronize { self.fitness.add_game winner: winner, loser: loser }
+          end
         end
       end
 
@@ -232,7 +236,7 @@ class Population
       sleep 1
     end
 
-    threads.each { |thread| thread.join }
+    ThreadsWait.all_waits(*threads)
   end
 
   def self.run!
