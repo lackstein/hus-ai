@@ -16,14 +16,13 @@ public class AlphaBetaSearch {
 	private LinearEval heuristic;
 	private long startTime;
 	private long allowedTime = 1600000000;
-	private final int MAX_DEPTH = 3;
-//	private Map<HusBoardState, Double> transmutations = new HashMap<HusBoardState, Double>();
+	private final int MAX_DEPTH = Integer.MAX_VALUE;
 
 	public AlphaBetaSearch(HusBoardState board_state, int my_id, int op_id, HashMap<String, Integer> weights) {
 		this.board_state = board_state;
 		this.my_id = my_id;
 		this.op_id = op_id;
-		this.heuristic = new LinearEval(my_id, weights);
+		this.heuristic = new LinearEval();
 	}
 	
 	public HusMove decide(){
@@ -60,7 +59,10 @@ public class AlphaBetaSearch {
 	public double max(HusBoardState state, double alpha, double beta, int depth, int max_depth) {
 		this.expandedNodes++;
 		
-		if(state.gameOver() || depth >= max_depth || System.nanoTime() - startTime > allowedTime)
+		if(state.gameOver() && state.getWinner() == this.my_id)
+			return Double.MAX_VALUE;
+		
+		if(depth >= max_depth || System.nanoTime() - startTime > allowedTime)
 			return heuristic.eval(state.getPits()[this.my_id], state.getPits()[this.op_id]);
 		
 		double value = Double.NEGATIVE_INFINITY;
@@ -89,7 +91,10 @@ public class AlphaBetaSearch {
 	public double min(HusBoardState state, double alpha, double beta, int depth, int max_depth) {
 		this.expandedNodes++;
 		
-		if(state.gameOver() || depth >= max_depth || System.nanoTime() - startTime > allowedTime)
+		if(state.gameOver() && state.getWinner() == this.my_id)
+			return Double.MAX_VALUE;
+		
+		if(depth >= max_depth || System.nanoTime() - startTime > allowedTime)
 			return heuristic.eval(state.getPits()[this.my_id], state.getPits()[this.op_id]);
 				
 		double value = Double.POSITIVE_INFINITY;
