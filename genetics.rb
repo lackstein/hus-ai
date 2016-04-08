@@ -200,9 +200,10 @@ class Population
     combinations.each_slice(100) do |slice|
 
       threads = []
+      port_modifier = 0
       slice.each_with_index do |(a, b), i|
         threads << Thread.new(a, b, i) do |alpha, beta, index|
-          env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}") # INDEX=#{index}
+          env_vars = %Q(ALPHA_GENOME="#{alpha.to_s}" BETA_GENOME="#{beta.to_s}" INDEX="#{port_modifier}")
           begin
             Timeout::timeout(10 + 1 * 60 * AUTOPLAY_GAMES) {
               `#{env_vars} java -cp "#{CLASS_PATH}" autoplay.Autoplay #{AUTOPLAY_GAMES}`
@@ -211,9 +212,10 @@ class Population
             combinations.push([alpha, beta])
             next
           end
+          port_modifier = (port_modifier + 1) % 2
         end
 
-        sleep 1.5
+        sleep 0.75
       end
       threads.each { |thread| thread.join }
 

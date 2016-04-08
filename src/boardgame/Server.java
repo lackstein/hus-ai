@@ -140,7 +140,9 @@ public class Server implements Runnable {
         } catch (Exception e) { printUsage(); return; }
         
     // Store the comand line parameters
-        ServerSocket ss = null;
+        ServerSocket ss1 = null;
+        ServerSocket ss2 = null;
+        int port_modifier = 0;
         do { // Keep launching servers
             try {
                 // If we have too many servers running, wait for one to finish
@@ -162,12 +164,20 @@ public class Server implements Runnable {
                 // Open a server socket, we can reuse this multiple times
                 // since the server won't close it unless cancelled by the GUI,
                 // in which case we want to quit anyway
-                if( ss == null ){
-                    ss = new ServerSocket(cmdArgPort);
+                if( ss1 == null ){
+                    ss1 = new ServerSocket(cmdArgPort);
+                }
+                if( ss2 == null ){
+                    ss2 = new ServerSocket(cmdArgPort + 1);
                 }
 
                 // Create the server
-                svr = new Server( b, argGui, cmdArgQuiet, ss, cmdArgTimeout, cmdArgFirstTimeout);
+                if(port_modifier % 2 == 0) {
+                	svr = new Server( b, argGui, cmdArgQuiet, ss1, cmdArgTimeout, cmdArgFirstTimeout);
+                } else {
+                	svr = new Server( b, argGui, cmdArgQuiet, ss2, cmdArgTimeout, cmdArgFirstTimeout);
+                	port_modifier = (port_modifier + 1) % 2;
+                }
 
                 // Launch the server
                 svr.run();
@@ -178,11 +188,13 @@ public class Server implements Runnable {
                 System.err.println( "Failed to start server:");
                 e.printStackTrace();
                 printUsage();
-                if( ss != null ) try { ss.close(); } catch(Exception ex) {}
+                if( ss1 != null ) try { ss1.close(); } catch(Exception ex) {}
+                if( ss2 != null ) try { ss2.close(); } catch(Exception ex) {}
                 return;
             }
         } while( argKeep );
-        if( ss != null ) try { ss.close(); } catch(Exception e) {}
+        if( ss1 != null ) try { ss1.close(); } catch(Exception e) {}
+        if( ss2 != null ) try { ss2.close(); } catch(Exception e) {}
     }
 
     /** Create a server which accepts two connections from the

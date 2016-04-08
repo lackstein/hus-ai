@@ -43,8 +43,8 @@ public class Autoplay
         try {
         	String index = System.getenv("INDEX");
         	if(index == null)
-        		index = "-1877";
-        	String port = Integer.toString(10000 + Integer.parseInt(index));
+        		index = "0";
+        	String port = Integer.toString(8123 + Integer.parseInt(index));
         	        	
 //            ProcessBuilder server_pb = new ProcessBuilder(
 //                "java", "-cp", "bin",  "boardgame.Server", "-ng", "-k", "-p", port, "-ft", "60000");
