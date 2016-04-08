@@ -195,7 +195,7 @@ class Population
   end
 
   def battle!
-    combinations = chromosomes.permutation(2).to_a
+    combinations = chromosomes.combination(2).to_a
 
     combinations.each_slice(100) do |slice|
 
